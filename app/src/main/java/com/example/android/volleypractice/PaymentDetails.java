@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.example.android.volleypractice.Config.Config;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
@@ -26,11 +28,13 @@ public class PaymentDetails extends AppCompatActivity {
         // Get Intent
         Intent intent = getIntent();
 
-        String paymentDetails = intent.getStringExtra("PaymentDetails");
+        String paymentDetails = intent.getStringExtra(Config.PAYMENT_DETAIL);
+        String paymentAmount = intent.getStringExtra(Config.PAYMENT_AMOUNT);
+
 
         try {
             JSONObject jsonObject = new JSONObject(paymentDetails);
-            showDetails(jsonObject.getJSONObject("response"), intent.getStringExtra("PaymentAmount"));
+            showDetails(jsonObject.getJSONObject("response"), paymentAmount);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -38,12 +42,20 @@ public class PaymentDetails extends AppCompatActivity {
 
     }
 
-    private void showDetails(JSONObject response, String paymentAmounts) {
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+    }
+
+    private void showDetails(JSONObject response, String paymentAmount) {
 
         try {
             txtId.setText(response.getString("id"));
             txtStatus.setText(response.getString("state"));
-            txtAmount.setText(response.getString(String.format("$%s", paymentAmounts)));
+            txtAmount.setText(String.format("$%s", paymentAmount));
+//            txtAmount.setText(response.getString(String.format("$%s", paymentAmount)));
 
         } catch (JSONException e) {
             e.printStackTrace();
